@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Cipher Hunt - IndabaX Sudan</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</head>
+
+<body class="light"> <!-- Default to Light, Script will toggle -->
+
+    <!-- Header -->
+    <header class="app-header" dir="ltr">
+        <div class="brand-logo-container">
+            <img src="https://i.postimg.cc/439XLGzf/Indaba-Xsudan-2025-Draft-4-Pdf-1-Edited.png" alt="IndabaX Logo">
+            <span class="font-heading" style="margin-left: 10px; font-weight: 800; color: #662d91;">IndabaX</span>
+        </div>
+
+        <div class="header-controls">
+            <button id="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="lang-toggle" onclick="toggleLanguage()"
+                style="margin-left: 10px; width: auto; padding: 0 10px; border-radius: 8px;">
+                EN
+            </button>
+        </div>
+    </header>
+
+    <canvas id="game-canvas"></canvas>
+
+    <button onclick="window.game.adminLogin()" class="admin-key">
+        <i class="fas fa-user-secret"></i>
+    </button>
+
+    <div id="ui-wrapper">
+        <div class="container-narrow">
+
+            <!-- Loading Screen -->
+            <div id="loading-screen" class="cyber-card" style="text-align: center;">
+                <div style="font-size: 3rem; color: var(--brand-primary); margin-bottom: 20px;">
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                </div>
+                <h2 class="font-heading" data-i18n="connecting">جاري الاتصال...</h2>
+            </div>
+
+            <!-- Game Container -->
+            <div id="main-game-container" class="cyber-card hidden-force animate-in">
+
+                <!-- Game Header -->
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid var(--text-secondary); padding-bottom: 15px;">
+                    <h1 class="font-heading"
+                        style="font-size: 1.5rem; margin: 0; background: linear-gradient(90deg, var(--brand-secondary), var(--brand-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"
+                        data-i18n="gameTitle">
+                        AI Cipher Hunt
+                    </h1>
+                    <div class="score-pill">
+                        <i class="fas fa-star" style="margin-right: 5px;"></i> <span id="val-score">0</span>
+                    </div>
+                </div>
+
+                <!-- View: Start -->
+                <div id="view-start">
+
+                    <div id="resume-btn-area" class="hidden-force"
+                        style="background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
+                        <p style="color: #22c55e; font-weight: bold; margin-bottom: 10px;" data-i18n="incompleteGame">
+                            لديك لعبة غير مكتملة!</p>
+                        <button onclick="window.game.resume()" class="btn-main" style="background: #22c55e;"
+                            data-i18n="resume">
+                            استكمال
+                        </button>
+                    </div>
+
+                    <div id="mission-selector-container">
+                        <p class="font-heading" style="margin-bottom: 15px; font-weight: bold;" data-i18n="choosePath">
+                            اختر المسار:</p>
+                        <div class="mission-grid">
+                            <div onclick="window.game.selectMission('mission_sam')" id="m-mission_sam"
+                                class="mission-wrapper selected">
+                                <i class="fas fa-robot"></i>
+                                <div class="font-tech" style="font-weight: bold;" data-i18n="pathSam">Mystery 1</div>
+                            </div>
+                            <div onclick="window.game.selectMission('mission_turing')" id="m-mission_turing"
+                                class="mission-wrapper">
+                                <i class="fas fa-code"></i>
+                                <div class="font-tech" style="font-weight: bold;" data-i18n="pathTuring">Mystery 2</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="forced-mission-display" class="hidden-force"
+                        style="text-align: center; background: rgba(128,128,128,0.1); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 2px dashed var(--brand-primary);">
+                        <p style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;"
+                            data-i18n="currentMission">المهمة الحالية:</p>
+                        <h3 id="forced-mission-name" class="font-heading"
+                            style="font-size: 1.8rem; color: var(--brand-primary);">...</h3>
+                    </div>
+
+                    <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 15px;">
+                        <input type="text" id="inp-name" class="cyber-input" placeholder="الاسم الكامل">
+                        <input type="text" id="inp-username" class="cyber-input" placeholder="اسم المستخدم"
+                            style="direction: ltr; text-align: right;"> <!-- Username often english -->
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <button onclick="window.game.start()" class="btn-main" data-i18n="startChallenge">
+                            بدء التحدي
+                        </button>
+                    </div>
+                </div>
+
+                <!-- View: Level -->
+                <div id="view-level" class="hidden-force">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: rgba(0,0,0,0.05); padding: 10px 15px; border-radius: 10px;">
+                        <div>
+                            <span style="font-size: 0.7rem; text-transform: uppercase; font-weight: bold; opacity: 0.7;"
+                                data-i18n="level">مستوى</span>
+                            <span id="val-level" class="font-heading"
+                                style="font-size: 1.5rem; color: var(--brand-secondary); margin-left: 5px;">1</span>
+                        </div>
+                        <div id="txt-timer" class="font-tech"
+                            style="font-size: 1.8rem; font-weight: 700; color: var(--brand-danger);">00:00</div>
+                    </div>
+
+                    <div class="clue-container">
+                        <div id="level-content-text" class="clue-text" dir="ltr"></div>
+                        <img id="level-content-img" class="clue-img hidden-force" alt="Clue">
+                        <div id="level-content-html" class="hidden-force"
+                            style="width: 100%; text-align: left; font-family: monospace; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px;"
+                            dir="ltr"></div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <input type="text" id="inp-answer" class="cyber-input"
+                            style="text-align: center; font-family: 'Rajdhani', monospace; font-size: 1.5rem; letter-spacing: 2px; text-transform: uppercase;"
+                            placeholder="...">
+
+                        <button onclick="window.game.check()" class="btn-main" data-i18n="check">
+                            تحقق
+                        </button>
+                        <button onclick="window.game.skip()" class="btn-secondary" data-i18n="skip">
+                            تخطي
+                        </button>
+                    </div>
+
+                    <div id="msg-box" class="hidden-force"
+                        style="margin-top: 15px; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold;">
+                    </div>
+                </div>
+
+                <!-- View: Win -->
+                <div id="view-win" class="hidden-force" style="text-align: center;">
+                    <div style="width: 150px; height: 150px; margin: 0 auto 20px; position: relative;">
+                        <div
+                            style="position: absolute; inset: 0; border: 4px solid var(--brand-primary); border-top-color: transparent; border-radius: 50%; animation: spin 2s linear infinite;">
+                        </div>
+                        <img id="img-reveal"
+                            style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 4px solid var(--card-bg);"
+                            src="">
+                    </div>
+
+                    <h2 id="txt-reveal-name" class="font-heading"
+                        style="font-size: 2rem; color: var(--brand-primary); margin-bottom: 5px;"></h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 25px;" data-i18n="revealSuccess">تم كشف
+                        الهوية بنجاح! 🎉</p>
+
+                    <button onclick="window.game.showScoreboard()" class="btn-main" data-i18n="viewLeaderboard">
+                        عرض القائمة
+                    </button>
+                </div>
+
+                <!-- View: Over -->
+                <div id="view-over" class="hidden-force" style="text-align: center;">
+                    <i class="fas fa-hourglass-end"
+                        style="font-size: 4rem; color: var(--brand-danger); margin-bottom: 20px;"></i>
+                    <h2 class="font-heading" style="font-size: 2rem; margin-bottom: 10px;" data-i18n="timeUp">انتهى
+                        الوقت!</h2>
+
+                    <div style="background: rgba(0,0,0,0.05); padding: 20px; border-radius: 15px; margin: 20px 0;">
+                        <div style="text-transform: uppercase; font-size: 0.8rem; font-weight: bold;"
+                            data-i18n="totalScore">مجموع النقاط</div>
+                        <div id="score-final" class="font-tech"
+                            style="font-size: 3rem; font-weight: 700; color: var(--brand-primary);">0</div>
+                    </div>
+
+                    <button onclick="window.game.showScoreboard()" class="btn-main" data-i18n="viewResults">
+                        عرض النتائج
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Scoreboard -->
+            <div id="scoreboard-container" class="cyber-card hidden-force animate-in"
+                style="height: 70vh; display: flex; flex-direction: column;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid var(--card-border);">
+                    <h2 class="font-heading" data-i18n="leaderboard">لوحة المتنافسين</h2>
+                    <button onclick="window.game.reset()"
+                        style="background: none; border: none; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer;"><i
+                            class="fas fa-times"></i></button>
+                </div>
+                <div id="sb-body" style="flex: 1; overflow-y: auto; padding-right: 5px; margin-top: 10px;"></div>
+                <div
+                    style="margin-top: 15px; text-align: center; padding-top: 15px; border-top: 1px solid var(--card-border);">
+                    <button onclick="window.game.reset()"
+                        style="background: none; border: none; color: var(--brand-primary); font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-home"></i> <span data-i18n="backHome">العودة</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <!-- Translations & Theme Logic -->
+    <script>
+        const translations = {
+            ar: {
+                gameTitle: "AI Cipher Hunt", connecting: "جاري الاتصال...", incompleteGame: "لديك لعبة غير مكتملة!", resume: "استكمال", choosePath: "اختر المسار:", pathSam: "Mystery 1", pathTuring: "Mystery 2", currentMission: "المهمة الحالية:", fullName: "الاسم الكامل", username: "اسم المستخدم", startChallenge: "بدء التحدي", level: "مستوى", check: "تحقق", skip: "تخطي", revealSuccess: "تم كشف الهوية بنجاح! 🎉", viewLeaderboard: "عرض القائمة", timeUp: "انتهى الوقت!", totalScore: "النقاط", viewResults: "عرض النتائج", leaderboard: "لوحة المتنافسين", backHome: "العودة", phAnswer: "أدخل الإجابة...", phName: "الاسم", phUser: "المستخدم", whoIs: "من هي الشخصية؟"
+            },
+            en: {
+                gameTitle: "AI Cipher Hunt", connecting: "Connecting...", incompleteGame: "Game in progress found!", resume: "Resume", choosePath: "Choose Path:", pathSam: "Mystery 1", pathTuring: "Mystery 2", currentMission: "Current Mission:", fullName: "Full Name", username: "Username", startChallenge: "Start Challenge", level: "Level", check: "Check", skip: "Skip", revealSuccess: "Identity Revealed! 🎉", viewLeaderboard: "Leaderboard", timeUp: "Time's Up!", totalScore: "Score", viewResults: "View Results", leaderboard: "Leaderboard", backHome: "Back Home", phAnswer: "Enter answer...", phName: "Full Name", phUser: "Username", whoIs: "Who is the character?"
+            }
+        };
+
+        let currentLang = 'ar';
+        const gameCanvas = document.getElementById('game-canvas');
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcon();
+            drawMatrix();
+        }
+        function updateThemeIcon() {
+            const isDark = document.body.classList.contains('dark');
+            const icon = document.querySelector('#theme-toggle i');
+            if (icon) icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark');
+        }
+        updateThemeIcon();
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('lang-toggle').innerText = currentLang === 'ar' ? 'EN' : 'عربي';
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) el.innerText = translations[currentLang][key];
+            });
+
+            const inputs = document.querySelectorAll('input[type="text"]');
+            const t = translations[currentLang];
+            inputs.forEach(inp => {
+                if (inp.id === 'inp-answer') {
+                    inp.placeholder = t.phAnswer;
+                } else {
+                    inp.style.textAlign = currentLang === 'ar' ? 'right' : 'left';
+                    if (inp.id === 'inp-name') inp.placeholder = t.phName;
+                    if (inp.id === 'inp-username') inp.placeholder = t.phUser;
+                }
+            });
+        }
+    </script>
+
+    <!-- Matrix Background Logic -->
+    <script>
+        const ctx = gameCanvas.getContext('2d');
+        let width, height;
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789アァカサタナハマヤャラワガザダバパイィキシチニヒミリヂビピウゥクスツヌフム';
+        const fontSize = 14;
+        let columns = 0;
+        let drops = [];
+
+        function resize() {
+            width = gameCanvas.width = window.innerWidth;
+            height = gameCanvas.height = window.innerHeight;
+            columns = width / fontSize;
+            drops = [];
+            for (let x = 0; x < columns; x++) drops[x] = Math.random() * height;
+        }
+
+        function drawMatrix() {
+            const isDark = document.body.classList.contains('dark');
+            ctx.fillStyle = isDark ? 'rgba(5, 5, 5, 0.1)' : 'rgba(243, 244, 246, 0.1)';
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const char = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+
+                if (isDark) {
+                    const r = Math.random();
+                    if (r > 0.9) ctx.fillStyle = '#fff';
+                    else if (r > 0.6) ctx.fillStyle = '#bc13fe';
+                    else ctx.fillStyle = '#00f2ff';
+                } else {
+                    const r = Math.random();
+                    if (r > 0.9) ctx.fillStyle = '#000';
+                    else if (r > 0.6) ctx.fillStyle = '#662d91';
+                    else ctx.fillStyle = '#f7931e';
+                }
+
+                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > height && Math.random() > 0.985) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        setInterval(drawMatrix, 50);
+    </script>
+
+    <!-- Logic (Enhanced) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, query, onSnapshot, addDoc, serverTimestamp, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Sound System
+        class SoundManager {
+            constructor() {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                this.enabled = true;
+            }
+            playTone(freq, type, duration, vol = 0.1) {
+                if (!this.enabled || !this.ctx) return;
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                    gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + duration);
+                } catch (e) { } // Handle gesture restrictions
+            }
+            playClick() { this.playTone(1200, 'sine', 0.1, 0.05); }
+            playError() {
+                this.playTone(150, 'sawtooth', 0.1, 0.1);
+                setTimeout(() => this.playTone(100, 'sawtooth', 0.2, 0.1), 100);
+            }
+            playSuccess() {
+                this.playTone(600, 'sine', 0.1, 0.1);
+                setTimeout(() => this.playTone(1200, 'square', 0.4, 0.05), 100);
+            }
+        }
+        const sfx = new SoundManager();
+        // Unlock Audio on first interaction
+        document.addEventListener('click', () => { if (sfx.ctx.state === 'suspended') sfx.ctx.resume(); }, { once: true });
+
+        // Hacker Text
+        function hackText(element, targetText) {
+            let iterations = 0;
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
+            const interval = setInterval(() => {
+                element.innerText = targetText.split('')
+                    .map((letter, index) => {
+                        if (index < iterations) return targetText[index];
+                        return chars[Math.floor(Math.random() * chars.length)];
+                    })
+                    .join('');
+                if (iterations >= targetText.length) clearInterval(interval);
+                iterations += 1 / 2;
+            }, 30);
+        }
+
+        const MISSIONS = {
+            "mission_sam": {
+                name: "Mystery 1",
+                data: [
+                    { type: 'text', content: "Gpdvt jt b gpsdf nvmujqmjfs po xpsk", hint: "شفرة قيصر (+1)", ans: "FOCUS IS A FORCE MULTIPLIER ON WORK", pts: 10, time: 240 },
+                    { type: 'img', content: "https://i.postimg.cc/28yNzmPC/Whats-App-Image-2025-10-28-at-03-06-32-1fc29a72.jpg", hint: "اسم الشركة؟", ans: "LOCATION BASED SOCIAL APP", pts: 5, time: 120 },
+                    { type: 'img', content: "https://i.postimg.cc/ZKnzTZ1q/Whats-App-Image-2025-10-28-at-03-06-32-b3091846.jpg", hint: "اكسر الرمز", ans: "3841", pts: 15, time: 600 },
+                    { type: 'img', content: "https://i.postimg.cc/FszX9m2S/Whats-App-Image-2025-10-28-at-03-06-32-2c52cb2b.jpg", hint: "انتظر...", ans: null, pts: 0, time: 40 },
+                    { type: 'html', content: `<p class="font-bold">3180 18th Street,</p><p>San Francisco, CA</p>`, hint: "اسم المنظمة؟", ans: "OPEN AI", pts: 5, time: 180 },
+                    { type: 'final_question', content: "Who is the character?", hint: "???", ans: "SAM ALTMAN", pts: 0, time: 999, revealImg: "https://i.postimg.cc/wTMY6HSv/Whats-App-Image-2025-10-28-at-03-06-32-bb976a41.jpg" }
+                ]
+            },
+            "mission_turing": {
+                name: "Mystery 2",
+                data: [
+                    { type: 'text', content: "NBDIJOFT DBO UIJOL", hint: "شفرة قيصر (+1)", ans: "MACHINES CAN THINK", pts: 10, time: 240 },
+                    { type: 'img', content: "https://placehold.co/600x400/0f172a/FFF?text=Enigma+Machine", hint: "اسم الآلة؟", ans: "ENIGMA", pts: 5, time: 120 },
+                    { type: 'text', content: "1950", hint: "سنة اختبار تورينج", ans: "1950", pts: 15, time: 600 },
+                    { type: 'text', content: "Wait...", hint: "Loading...", ans: null, pts: 0, time: 40 },
+                    { type: 'html', content: "<p class='font-bold'>Bletchley Park, UK</p>", hint: "المكان؟", ans: "BLETCHLEY PARK", pts: 5, time: 180 },
+                    { type: 'final_question', content: "Who is the character?", hint: "???", ans: "ALAN TURING", pts: 0, time: 999, revealImg: "https://placehold.co/300x300/e66d15/FFF?text=Turing" }
+                ]
+            }
+        };
+
+        const CONFIG = {
+            firebase: {
+                apiKey: "AIzaSyDTuocX-lCYRMrgFQLnSzKcpnQnL2sLHs0",
+                authDomain: "ai-cipher-hunt-p2.firebaseapp.com",
+                projectId: "ai-cipher-hunt-p2",
+                storageBucket: "ai-cipher-hunt-p2.firebasestorage.app",
+                messagingSenderId: "539746998922",
+                appId: "1:539746998922:web:579ec59bc94a0a4d9aab73",
+                measurementId: "G-ENP1QLMEKD"
+            }
+        };
+
+        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : CONFIG.firebase.projectId;
+
+        class GameEngine {
+            constructor() { this.state = { missionId: 'mission_sam', levelIdx: 0, score: 0, name: '', username: '', isPlaying: false }; this.timer = null; this.timeLeft = 0; this.maxTime = 100; this.db = null; this.userId = null; this.isConfigControlled = false; }
+            async init() {
+                if (CONFIG.firebase.projectId) {
+                    const app = initializeApp(CONFIG.firebase); this.db = getFirestore(app); const auth = getAuth(app); await signInAnonymously(auth);
+                    onAuthStateChanged(auth, (u) => { this.userId = u ? u.uid : 'guest'; this.listenToConfig(); });
+                } else { this.userId = 'offline'; this.onReady(); }
+            }
+            listenToConfig() {
+                const configRef = doc(this.db, "artifacts", APP_ID, "public", "data", "game_config", "status");
+                onSnapshot(configRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const activeId = docSnap.data().active_mission_id;
+                        this.applyConfig(activeId);
+                    } else {
+                        this.applyConfig('SELECTION_MODE');
+                    }
+                    this.onReady();
+                }, (error) => {
+                    console.warn("Config fetch fallback (offline mode):", error);
+                    this.applyConfig('SELECTION_MODE');
+                    this.onReady();
+                });
+            }
+            applyConfig(activeId) {
+                const selector = document.getElementById('mission-selector-container');
+                const forcedDisplay = document.getElementById('forced-mission-display');
+                if (selector && forcedDisplay) {
+                    if (activeId && activeId !== 'SELECTION_MODE' && MISSIONS[activeId]) {
+                        this.isConfigControlled = true;
+                        this.state.missionId = activeId;
+                        selector.classList.add('hidden-force');
+                        forcedDisplay.classList.remove('hidden-force');
+                        if (document.getElementById('forced-mission-name'))
+                            document.getElementById('forced-mission-name').innerText = MISSIONS[activeId].name;
+                    } else {
+                        this.isConfigControlled = false;
+                        selector.classList.remove('hidden-force');
+                        forcedDisplay.classList.add('hidden-force');
+                    }
+                }
+            }
+            onReady() {
+                const loader = document.getElementById('loading-screen');
+                const main = document.getElementById('main-game-container');
+                if (loader) loader.classList.add('hidden-force');
+                if (main) main.classList.remove('hidden-force');
+
+                const saved = localStorage.getItem('indabax_canvas_v3');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        if (parsed.levelIdx > 0 && parsed.levelIdx < 6) {
+                            this.state = parsed;
+                            const resumeBtn = document.getElementById('resume-btn-area');
+                            if (resumeBtn) resumeBtn.classList.remove('hidden-force');
+                        }
+                    } catch (e) { localStorage.removeItem('indabax_canvas_v3'); }
+                }
+            }
+            selectMission(id) {
+                sfx.playClick();
+                if (this.isConfigControlled) return;
+                this.state.missionId = id;
+                document.querySelectorAll('.mission-wrapper').forEach(el => el.classList.remove('selected'));
+                const card = document.getElementById(`m-${id}`);
+                if (card) card.classList.add('selected');
+            }
+            start() {
+                sfx.playClick();
+                const name = document.getElementById('inp-name').value.trim(); const user = document.getElementById('inp-username').value.trim();
+                if (!name || !user) return alert('يرجى إدخال البيانات');
+                this.state = { ...this.state, name, username: user, score: 0, levelIdx: 0 }; this.save(); this.renderLevel();
+            }
+            resume() { sfx.playClick(); this.renderLevel(); }
+            save() { localStorage.setItem('indabax_canvas_v3', JSON.stringify(this.state)); }
+
+            adminLogin() {
+                const pass = prompt("🔒 ADMIN ACCESS:");
+                if (pass === "INNOVATE") { window.location.href = "admin.html"; }
+                else if (pass !== null) { alert("ACCESS DENIED"); }
+            }
+
+            renderLevel() {
+                this.state.isPlaying = true;
+                if (document.getElementById('view-start')) document.getElementById('view-start').classList.add('hidden-force');
+                if (document.getElementById('view-level')) document.getElementById('view-level').classList.remove('hidden-force');
+
+                const levelData = MISSIONS[this.state.missionId].data[this.state.levelIdx];
+                if (document.getElementById('val-score')) document.getElementById('val-score').innerText = this.state.score;
+                if (document.getElementById('val-level')) document.getElementById('val-level').innerText = this.state.levelIdx + 1;
+
+                const txtEl = document.getElementById('level-content-text'), imgEl = document.getElementById('level-content-img'), htmlEl = document.getElementById('level-content-html');
+
+                // Clear state
+                if (imgEl) imgEl.classList.add('hidden-force');
+                if (htmlEl) htmlEl.classList.add('hidden-force');
+                if (document.getElementById('msg-box')) document.getElementById('msg-box').classList.add('hidden-force');
+                const inp = document.getElementById('inp-answer');
+                if (inp) {
+                    inp.value = "";
+                    inp.disabled = false;
+                    inp.focus();
+                    inp.classList.remove('animate-shake');
+                    inp.style.borderColor = "";
+                }
+
+                if (levelData.type === 'text' || levelData.type === 'final_question') {
+                    if (txtEl) {
+                        txtEl.innerText = "";
+                        let content = levelData.content;
+                        if (levelData.type === 'final_question') {
+                            content = translations[currentLang].whoIs || levelData.content;
+                        }
+                        hackText(txtEl, content); // Use hack effect
+                    }
+                }
+                else if (levelData.type === 'img') {
+                    if (txtEl) txtEl.innerText = levelData.hint || "Analyze";
+                    imgEl.src = levelData.content; imgEl.classList.remove('hidden-force');
+                }
+                else if (levelData.type === 'html') {
+                    if (txtEl) txtEl.innerText = levelData.hint || "Decipher";
+                    htmlEl.innerHTML = levelData.content; htmlEl.classList.remove('hidden-force');
+                }
+
+                if (this.timer) clearInterval(this.timer);
+                this.maxTime = this.timeLeft = levelData.time;
+                this.updateTimerUI();
+
+                this.timer = setInterval(() => {
+                    this.timeLeft--;
+                    this.updateTimerUI();
+                    if (this.timeLeft <= 0) {
+                        clearInterval(this.timer);
+                        if (levelData.ans === null) this.nextLevel();
+                        else this.gameOver();
+                    }
+                }, 1000);
+            }
+            updateTimerUI() {
+                const min = Math.floor(this.timeLeft / 60).toString().padStart(2, '0'), sec = (this.timeLeft % 60).toString().padStart(2, '0');
+                if (document.getElementById('txt-timer')) {
+                    document.getElementById('txt-timer').innerText = `${min}:${sec}`;
+                }
+            }
+            check() {
+                const levelData = MISSIONS[this.state.missionId].data[this.state.levelIdx];
+                if (document.getElementById('inp-answer').value.trim().toUpperCase() === levelData.ans) {
+                    this.state.score += levelData.pts;
+                    sfx.playSuccess();
+                    this.showMsg('success', 'إجابة صحيحة! ACCESS GRANTED');
+                    confetti({ origin: { y: 0.7 }, colors: ['#00f2ff', '#bc13fe'] });
+
+                    if (levelData.type === 'final_question') {
+                        setTimeout(() => this.showWin(levelData), 1500);
+                    } else {
+                        setTimeout(() => this.nextLevel(), 1500);
+                    }
+                } else {
+                    sfx.playError();
+                    this.showMsg('error', 'إجابة خاطئة! RETRY');
+                    const inp = document.getElementById('inp-answer');
+                    inp.classList.add('animate-shake');
+                    setTimeout(() => inp.classList.remove('animate-shake'), 500);
+                }
+            }
+            skip() {
+                sfx.playClick();
+                const levelData = MISSIONS[this.state.missionId].data[this.state.levelIdx];
+                this.showMsg('error', 'تم تخطي المستوى... SKIPPING');
+
+                if (levelData.type === 'final_question') {
+                    setTimeout(() => this.showWin(levelData), 1000);
+                } else {
+                    setTimeout(() => this.nextLevel(), 1000);
+                }
+            }
+            nextLevel() { this.state.levelIdx++; this.save(); this.renderLevel(); }
+            showMsg(type, txt) {
+                const box = document.getElementById('msg-box');
+                if (!box) return;
+                box.innerText = txt;
+                if (type === 'success') {
+                    box.style.background = 'rgba(34, 197, 94, 0.1)';
+                    box.style.color = '#22c55e';
+                    box.style.border = '1px solid #22c55e';
+                } else {
+                    box.style.background = 'rgba(239, 68, 68, 0.1)';
+                    box.style.color = '#ef4444';
+                    box.style.border = '1px solid #ef4444';
+                }
+                box.classList.remove('hidden-force');
+            }
+            showWin(data) {
+                this.state.isPlaying = false;
+                if (document.getElementById('view-level')) document.getElementById('view-level').classList.add('hidden-force');
+                if (document.getElementById('view-win')) document.getElementById('view-win').classList.remove('hidden-force');
+
+                if (document.getElementById('img-reveal')) document.getElementById('img-reveal').src = data.revealImg || data.content;
+                if (document.getElementById('txt-reveal-name')) document.getElementById('txt-reveal-name').innerText = data.ans;
+
+                this.uploadScore('WIN'); localStorage.removeItem('indabax_canvas_v3'); confetti({ particleCount: 200, spread: 100 });
+            }
+            gameOver() {
+                this.state.isPlaying = false;
+                if (document.getElementById('view-level')) document.getElementById('view-level').classList.add('hidden-force');
+                if (document.getElementById('view-over')) document.getElementById('view-over').classList.remove('hidden-force');
+                if (document.getElementById('score-final')) document.getElementById('score-final').innerText = this.state.score;
+                this.uploadScore('TIME_UP'); localStorage.removeItem('indabax_canvas_v3');
+            }
+            async uploadScore(status) {
+                if (!this.db) return;
+                try { await addDoc(collection(this.db, "artifacts", APP_ID, "public", "data", "cipher_scores"), { name: this.state.username, realName: this.state.name, score: this.state.score, mission: MISSIONS[this.state.missionId].name, status, timestamp: serverTimestamp() }); } catch (e) { }
+            }
+            showScoreboard() {
+                sfx.playClick();
+                document.getElementById('main-game-container').classList.add('hidden-force'); document.getElementById('scoreboard-container').classList.remove('hidden-force');
+                if (!this.db) {
+                    document.getElementById('sb-body').innerHTML = "<div style='text-align:center;'>Offline</div>";
+                    return;
+                }
+                const body = document.getElementById('sb-body');
+                body.innerHTML = "<div style='text-align:center; margin-top:20px;'>Fetching...</div>";
+
+                onSnapshot(query(collection(this.db, "artifacts", APP_ID, "public", "data", "cipher_scores")), (snap) => {
+                    const list = []; snap.forEach(d => list.push(d.data())); list.sort((a, b) => b.score - a.score);
+                    if (body) {
+                        body.innerHTML = "";
+                        list.forEach((p, i) => {
+                            const div = document.createElement('div');
+                            div.style.cssText = "display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(0,0,0,0.1); margin-bottom: 5px; border-radius: 8px;";
+                            div.innerHTML = `
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <span style="font-weight:bold; color:var(--brand-primary);">#${i + 1}</span>
+                                    <div>
+                                        <div style="font-weight:bold; font-size:0.9rem;">${p.name}</div>
+                                        <div style="font-size:0.7rem; opacity:0.7;">${p.mission || 'N/A'} - ${p.realName}</div>
+                                    </div>
+                                </div>
+                                <div style="font-weight:900; font-family:'Rajdhani'; font-size:1.2rem;">${p.score}</div>
+                             `;
+                            body.appendChild(div);
+                        });
+                    }
+                });
+            }
+            reset() { location.reload(); }
+        }
+        window.game = new GameEngine(); window.game.init();
+    </script>
+</body>
+
+</html>
