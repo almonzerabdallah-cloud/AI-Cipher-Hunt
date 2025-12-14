@@ -461,18 +461,10 @@
                 const selector = document.getElementById('mission-selector-container');
                 const forcedDisplay = document.getElementById('forced-mission-display');
                 if (selector && forcedDisplay) {
-                    if (activeId && activeId !== 'SELECTION_MODE' && MISSIONS[activeId]) {
-                        this.isConfigControlled = true;
-                        this.state.missionId = activeId;
-                        selector.classList.add('hidden-force');
-                        forcedDisplay.classList.remove('hidden-force');
-                        if (document.getElementById('forced-mission-name'))
-                            document.getElementById('forced-mission-name').innerText = MISSIONS[activeId].name;
-                    } else {
-                        this.isConfigControlled = false;
-                        selector.classList.remove('hidden-force');
-                        forcedDisplay.classList.add('hidden-force');
-                    }
+                    // Always show both missions - ignore Firebase config
+                    this.isConfigControlled = false;
+                    selector.classList.remove('hidden-force');
+                    forcedDisplay.classList.add('hidden-force');
                 }
             }
             onReady() {
