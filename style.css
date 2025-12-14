@@ -3,61 +3,68 @@
 /* --- Theming Variables --- */
 :root {
     /* Default (Light Mode) - Clean, High-Tech Corporate */
-    --bg-body: #f3f4f6;
-    --bg-grad-start: #f3f4f6;
-    --bg-grad-end: #e5e7eb;
+    --bg-body: #f8fafc;
+    --bg-grad-start: #e0f2fe;
+    --bg-grad-end: #f1f5f9;
 
-    --card-bg: rgba(255, 255, 255, 0.75);
-    --card-border: rgba(247, 147, 30, 0.2);
-    --card-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-border: rgba(247, 147, 30, 0.25);
+    --card-shadow: 0 20px 60px -15px rgba(247, 147, 30, 0.15), 0 8px 25px -8px rgba(0, 0, 0, 0.1);
 
-    --text-primary: #111827;
-    --text-secondary: #4b5563;
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
     --text-accent: #c1272d;
 
     --brand-primary: #f7931e;
-    /* Indaba Orange */
     --brand-secondary: #662d91;
-    /* Indaba Purple */
-    --brand-danger: #c1272d;
-    /* Indaba Red */
-    --brand-glow: rgba(247, 147, 30, 0.4);
+    --brand-danger: #dc2626;
+    --brand-success: #16a34a;
+    --brand-glow: rgba(247, 147, 30, 0.5);
 
-    --glass-blur: 12px;
+    --glass-blur: 20px;
+    --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark {
-    /* Dark Mode - Cyberpunk/Neon */
-    --bg-body: #050505;
-    --bg-grad-start: #0a0a0a;
+    /* Dark Mode - Premium Cyberpunk */
+    --bg-body: #030712;
+    --bg-grad-start: #0c0a20;
     --bg-grad-end: #000000;
 
-    --card-bg: rgba(20, 20, 25, 0.6);
-    --card-border: rgba(0, 242, 255, 0.2);
-    --card-shadow: 0 0 50px -10px rgba(0, 242, 255, 0.15);
+    --card-bg: rgba(15, 23, 42, 0.7);
+    --card-border: rgba(0, 242, 255, 0.15);
+    --card-shadow: 0 25px 80px -20px rgba(0, 242, 255, 0.2), 0 0 40px -10px rgba(188, 19, 254, 0.15);
 
-    --text-primary: #f9fafb;
-    --text-secondary: #9ca3af;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
     --text-accent: #00f2ff;
 
     --brand-primary: #00f2ff;
-    /* Cyan Override for Dark */
     --brand-secondary: #bc13fe;
-    /* Neon Purple */
     --brand-danger: #ff2a6d;
-    /* Neon Pink */
-    --brand-glow: rgba(0, 242, 255, 0.5);
+    --brand-success: #22c55e;
+    --brand-glow: rgba(0, 242, 255, 0.6);
 }
 
 /* --- Global Reset & Typography --- */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
-    overflow: hidden;
+    overflow-x: hidden;
     font-family: 'Cairo', sans-serif;
     color: var(--text-primary);
-    background: radial-gradient(circle at top, var(--bg-grad-start), var(--bg-grad-end));
-    height: 100vh;
-    transition: background 0.5s ease, color 0.3s ease;
+    background: linear-gradient(135deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%);
+    min-height: 100vh;
+    min-height: 100dvh;
+    transition: background 0.5s var(--transition-smooth), color 0.3s ease;
 }
 
 h1,
@@ -65,6 +72,7 @@ h2,
 h3,
 .font-heading {
     font-family: 'Orbitron', sans-serif;
+    letter-spacing: 0.5px;
 }
 
 .font-tech {
@@ -80,32 +88,32 @@ h3,
     height: 100%;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.6;
+    opacity: 0.5;
     transition: opacity 0.5s;
 }
 
 .dark #game-canvas {
-    opacity: 0.8;
+    opacity: 0.7;
 }
 
 /* --- Layout Wrappers --- */
 #ui-wrapper {
-    position: absolute;
-    inset: 0;
+    position: relative;
     z-index: 10;
     display: flex;
     flex-direction: column;
-    padding-top: 80px;
-    /* Header space */
-    scrollbar-width: thin;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 90px 16px 30px;
     overflow-y: auto;
 }
 
 .container-narrow {
     width: 100%;
-    max-width: 600px;
+    max-width: 480px;
     margin: 0 auto;
-    padding: 20px;
 }
 
 /* --- Components: Header --- */
@@ -114,73 +122,96 @@ h3,
     top: 0;
     left: 0;
     right: 0;
-    height: 70px;
+    height: 64px;
     background: var(--card-bg);
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
     border-bottom: 1px solid var(--card-border);
-    z-index: 50;
+    z-index: 100;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    padding: 0 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s var(--transition-smooth);
 }
 
 .brand-logo-container {
-    height: 40px;
-    padding: 4px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    box-shadow: 0 0 15px var(--brand-glow);
+    height: 38px;
+    padding: 5px 10px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+    border-radius: 10px;
+    box-shadow: 0 2px 15px var(--brand-glow), inset 0 1px 0 rgba(255, 255, 255, 0.5);
     display: flex;
     align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(247, 147, 30, 0.1);
 }
 
 .brand-logo-container img {
     height: 100%;
-    w: auto;
+    width: auto;
     object-fit: contain;
+}
+
+.header-controls {
+    display: flex;
+    gap: 8px;
 }
 
 .header-controls button {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    border-radius: 12px;
     border: 1px solid var(--card-border);
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
     color: var(--text-primary);
     cursor: pointer;
-    transition: 0.2s;
+    transition: all 0.3s var(--transition-smooth);
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1rem;
 }
 
 .header-controls button:hover {
     background: var(--brand-primary);
     color: #fff;
-    box-shadow: 0 0 15px var(--brand-glow);
-    transform: rotate(15deg);
+    box-shadow: 0 4px 20px var(--brand-glow);
+    transform: translateY(-2px);
+    border-color: transparent;
 }
 
 /* --- Components: Card --- */
 .cyber-card {
     background: var(--card-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--card-border);
-    border-radius: 24px;
+    border-radius: 28px;
     box-shadow: var(--card-shadow);
-    padding: 30px;
+    padding: 28px;
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: box-shadow 0.4s var(--transition-smooth);
 }
 
-.cyber-card:hover {
-    box-shadow: 0 20px 50px -10px var(--brand-glow);
+/* Decorative gradient accent */
+.cyber-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+    opacity: 0.8;
+}
+
+.dark .cyber-card::before {
+    opacity: 1;
+    box-shadow: 0 0 20px var(--brand-glow);
 }
 
 /* --- Components: Buttons --- */
@@ -189,45 +220,63 @@ h3,
     border: none;
     color: #fff;
     padding: 16px 32px;
-    border-radius: 12px;
+    border-radius: 16px;
     font-family: 'Orbitron', sans-serif;
     font-weight: 700;
+    font-size: 0.95rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     width: 100%;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s var(--transition-smooth);
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 15px var(--brand-glow);
+    box-shadow: 0 8px 30px -8px var(--brand-glow);
+}
+
+.btn-main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn-main:hover::before {
+    left: 100%;
 }
 
 .btn-main:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 30px var(--brand-glow);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px -8px var(--brand-glow);
     filter: brightness(1.1);
 }
 
 .btn-main:active {
-    transform: scale(0.98);
+    transform: translateY(-1px) scale(0.98);
 }
 
 .btn-secondary {
     background: transparent;
     border: 2px solid var(--text-secondary);
     color: var(--text-secondary);
-    padding: 12px;
-    border-radius: 12px;
+    padding: 14px 24px;
+    border-radius: 14px;
     font-weight: 700;
+    font-size: 0.9rem;
     width: 100%;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s var(--transition-smooth);
 }
 
 .btn-secondary:hover {
     border-color: var(--brand-danger);
     color: var(--brand-danger);
-    background: rgba(255, 42, 109, 0.05);
+    background: rgba(220, 38, 38, 0.08);
+    transform: translateY(-2px);
 }
 
 /* --- Components: Inputs --- */
@@ -236,11 +285,11 @@ h3,
     background: rgba(0, 0, 0, 0.03);
     border: 2px solid var(--card-border);
     color: var(--text-primary);
-    padding: 14px;
-    border-radius: 12px;
+    padding: 16px 18px;
+    border-radius: 14px;
     font-family: 'Cairo', sans-serif;
-    font-size: 1.1rem;
-    transition: 0.3s;
+    font-size: 1rem;
+    transition: all 0.3s var(--transition-smooth);
     outline: none;
 }
 
@@ -250,77 +299,125 @@ h3,
 
 .cyber-input:focus {
     border-color: var(--brand-primary);
-    box-shadow: 0 0 15px var(--brand-glow);
+    box-shadow: 0 0 0 4px rgba(247, 147, 30, 0.15), 0 4px 20px -8px var(--brand-glow);
     background: transparent;
+}
+
+.cyber-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
 }
 
 /* --- Components: Missions --- */
 .mission-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 12px;
 }
 
 .mission-wrapper {
     position: relative;
     border: 2px solid var(--card-border);
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 16px;
-    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 18px;
+    padding: 22px 16px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s var(--transition-smooth);
     text-align: center;
+    overflow: hidden;
 }
 
-.mission-wrapper:hover {
-    transform: translateY(-5px);
-    border-color: var(--brand-primary);
+.dark .mission-wrapper {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.mission-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 0;
+}
+
+.mission-wrapper:hover::before,
+.mission-wrapper.selected::before {
+    opacity: 0.15;
 }
 
 .mission-wrapper.selected {
-    background: var(--brand-glow);
     border-color: var(--brand-primary);
-    box-shadow: inset 0 0 20px var(--brand-glow);
+    box-shadow: 0 8px 30px -10px var(--brand-glow), inset 0 0 0 1px rgba(247, 147, 30, 0.3);
 }
 
 .mission-wrapper i {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     margin-bottom: 10px;
     color: var(--text-secondary);
-    transition: 0.3s;
+    transition: all 0.3s var(--transition-smooth);
+    position: relative;
+    z-index: 1;
 }
 
 .mission-wrapper:hover i,
 .mission-wrapper.selected i {
-    color: #fff;
+    color: var(--brand-primary);
+    transform: scale(1.1);
+    text-shadow: 0 4px 20px var(--brand-glow);
+}
+
+.mission-wrapper .font-tech {
+    position: relative;
+    z-index: 1;
+    font-weight: 700;
+    font-size: 0.95rem;
 }
 
 /* --- Components: Clues --- */
 .clue-container {
-    background: rgba(128, 128, 128, 0.1);
+    background: linear-gradient(135deg, rgba(128, 128, 128, 0.08) 0%, rgba(128, 128, 128, 0.03) 100%);
     border-inline-start: 4px solid var(--brand-primary);
-    padding: 20px;
-    margin-bottom: 25px;
-    border-radius: 8px;
+    padding: 24px 20px;
+    margin-bottom: 24px;
+    border-radius: 16px;
     min-height: 120px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.clue-container::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, var(--brand-glow) 0%, transparent 70%);
+    opacity: 0.1;
+    pointer-events: none;
 }
 
 .clue-text {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    line-height: 1.6;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
 }
 
 .clue-img {
     max-width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--card-border);
+    max-height: 220px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--card-border);
+    object-fit: contain;
 }
 
 /* --- Utilities --- */
@@ -330,19 +427,48 @@ h3,
 
 /* --- Badge --- */
 .score-pill {
-    background: var(--brand-primary);
+    background: linear-gradient(135deg, var(--brand-primary), #e67e00);
     color: #fff;
-    padding: 5px 15px;
+    padding: 8px 18px;
     border-radius: 50px;
     font-weight: 700;
-    box-shadow: 0 2px 10px var(--brand-glow);
+    font-size: 0.95rem;
+    box-shadow: 0 4px 20px -4px var(--brand-glow);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* --- Level Header --- */
+.level-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.02) 100%);
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 1px solid var(--card-border);
+}
+
+.dark .level-header {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+}
+
+/* --- Timer styling --- */
+#txt-timer {
+    background: linear-gradient(135deg, var(--brand-danger), #b91c1c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 900;
 }
 
 /* --- Animations --- */
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(15px);
     }
 
     to {
@@ -351,8 +477,32 @@ h3,
     }
 }
 
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+@keyframes glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px var(--brand-glow);
+    }
+
+    50% {
+        box-shadow: 0 0 40px var(--brand-glow);
+    }
+}
+
 .animate-in {
-    animation: fadeIn 0.4s ease forwards;
+    animation: fadeIn 0.5s var(--transition-smooth) forwards;
 }
 
 /* --- Error Shake Animation --- */
@@ -368,20 +518,21 @@ h3,
     50%,
     70%,
     90% {
-        transform: translateX(-5px);
+        transform: translateX(-6px);
     }
 
     20%,
     40%,
     60%,
     80% {
-        transform: translateX(5px);
+        transform: translateX(6px);
     }
 }
 
 .animate-shake {
-    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+    animation: shake 0.5s var(--transition-smooth) both;
     border-color: var(--brand-danger) !important;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.2) !important;
 }
 
 /* --- Custom Scrollbar --- */
@@ -389,8 +540,12 @@ h3,
     width: 6px;
 }
 
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 ::-webkit-scrollbar-thumb {
-    background: var(--brand-primary);
+    background: linear-gradient(180deg, var(--brand-primary), var(--brand-secondary));
     border-radius: 10px;
 }
 
@@ -399,9 +554,9 @@ h3,
     position: fixed;
     bottom: 20px;
     left: 20px;
-    opacity: 0.1;
+    opacity: 0.08;
     font-size: 1.5rem;
-    transition: 0.3s;
+    transition: all 0.4s var(--transition-smooth);
     cursor: pointer;
     color: var(--text-primary);
     z-index: 100;
@@ -409,94 +564,88 @@ h3,
 
 .admin-key:hover {
     opacity: 1;
-    transform: rotate(180deg);
+    transform: rotate(180deg) scale(1.2);
     color: var(--brand-secondary);
+    text-shadow: 0 0 20px var(--brand-glow);
 }
 
 /* ========================================
-   MOBILE RESPONSIVE STYLES
+   MOBILE RESPONSIVE - PERFECT MOBILE UX
    ======================================== */
 
-/* Mobile-first media queries */
 @media screen and (max-width: 768px) {
-
-    /* Body adjustments */
     body {
         overflow-x: hidden;
     }
 
-    /* Header */
     .app-header {
         height: 60px;
-        padding: 0 15px;
+        padding: 0 12px;
     }
 
     .brand-logo-container {
-        height: 35px;
+        height: 34px;
+        padding: 4px 8px;
     }
 
     .brand-logo-container span {
-        font-size: 0.9rem !important;
+        font-size: 0.85rem !important;
     }
 
     .header-controls button {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
     }
 
-    /* UI Wrapper */
     #ui-wrapper {
-        padding-top: 70px;
+        padding: 72px 12px 24px;
     }
 
     .container-narrow {
-        padding: 15px;
         max-width: 100%;
     }
 
-    /* Cards */
     .cyber-card {
-        padding: 20px;
-        border-radius: 20px;
+        padding: 22px 18px;
+        border-radius: 22px;
     }
 
-    /* Game Title */
     .cyber-card h1 {
-        font-size: 1.2rem !important;
+        font-size: 1.15rem !important;
     }
 
-    /* Inputs */
     .cyber-input {
-        padding: 12px;
-        font-size: 1rem;
+        padding: 14px 16px;
+        font-size: 16px;
+        /* Prevents iOS zoom */
+        border-radius: 12px;
     }
 
-    /* Buttons - Touch friendly */
     .btn-main {
-        padding: 14px 24px;
-        font-size: 0.9rem;
-        border-radius: 10px;
-        min-height: 48px;
-        /* Touch target */
+        padding: 16px 24px;
+        font-size: 0.88rem;
+        border-radius: 14px;
+        min-height: 52px;
     }
 
     .btn-secondary {
-        padding: 12px;
-        min-height: 44px;
+        padding: 14px;
+        min-height: 48px;
+        border-radius: 12px;
     }
 
-    /* Mission Grid */
     .mission-grid {
         gap: 10px;
     }
 
     .mission-wrapper {
-        padding: 15px;
-        border-radius: 12px;
+        padding: 18px 12px;
+        border-radius: 14px;
     }
 
     .mission-wrapper i {
-        font-size: 2rem;
+        font-size: 1.8rem;
         margin-bottom: 8px;
     }
 
@@ -504,70 +653,56 @@ h3,
         font-size: 0.9rem;
     }
 
-    /* Level View */
     .clue-container {
-        padding: 15px;
+        padding: 18px 16px;
         min-height: 100px;
+        border-radius: 14px;
     }
 
     .clue-text {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
     }
 
     .clue-img {
-        max-height: 200px;
-        object-fit: contain;
+        max-height: 180px;
     }
 
-    /* Timer */
     #txt-timer {
-        font-size: 1.4rem !important;
-    }
-
-    #val-level {
-        font-size: 1.2rem !important;
-    }
-
-    /* Score pill */
-    .score-pill {
-        padding: 4px 12px;
-        font-size: 0.85rem;
-    }
-
-    /* Scoreboard */
-    #scoreboard-container {
-        height: auto;
-        max-height: 80vh;
-    }
-
-    #scoreboard-container h2 {
-        font-size: 1.2rem;
-    }
-
-    /* Win/Over screens */
-    #view-win div:first-child,
-    #view-over i {
-        transform: scale(0.9);
-    }
-
-    #txt-reveal-name {
         font-size: 1.5rem !important;
     }
 
+    #val-level {
+        font-size: 1.3rem !important;
+    }
+
+    .score-pill {
+        padding: 6px 14px;
+        font-size: 0.88rem;
+    }
+
+    #scoreboard-container {
+        height: auto;
+        max-height: 85vh;
+    }
+
+    #txt-reveal-name {
+        font-size: 1.6rem !important;
+    }
+
     #score-final {
-        font-size: 2.5rem !important;
+        font-size: 2.8rem !important;
     }
 }
 
-/* Extra small screens (phones in portrait) */
-@media screen and (max-width: 400px) {
-    .container-narrow {
-        padding: 10px;
+/* Extra small screens */
+@media screen and (max-width: 380px) {
+    #ui-wrapper {
+        padding: 68px 10px 20px;
     }
 
     .cyber-card {
-        padding: 15px;
-        border-radius: 16px;
+        padding: 18px 14px;
+        border-radius: 18px;
     }
 
     .cyber-card h1 {
@@ -579,17 +714,12 @@ h3,
     }
 
     .brand-logo-container span {
-        font-size: 0.8rem !important;
-        margin-left: 5px !important;
-    }
-
-    .mission-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
+        font-size: 0.75rem !important;
+        display: none;
     }
 
     .mission-wrapper {
-        padding: 12px;
+        padding: 14px 10px;
     }
 
     .mission-wrapper i {
@@ -597,61 +727,66 @@ h3,
     }
 
     .btn-main {
-        padding: 12px 20px;
-        font-size: 0.85rem;
+        padding: 14px 20px;
+        font-size: 0.82rem;
+        letter-spacing: 1px;
     }
 
-    .cyber-input {
-        padding: 10px;
+    .clue-text {
         font-size: 0.95rem;
     }
 
     #inp-answer {
-        font-size: 1.2rem !important;
-    }
-
-    .clue-text {
-        font-size: 1rem;
-    }
-
-    #txt-timer {
-        font-size: 1.2rem !important;
+        font-size: 1.1rem !important;
     }
 }
 
-/* Landscape orientation adjustments */
+/* Landscape mode */
 @media screen and (max-height: 500px) and (orientation: landscape) {
     #ui-wrapper {
-        padding-top: 65px;
+        padding-top: 56px;
     }
 
     .app-header {
-        height: 50px;
+        height: 48px;
     }
 
     .cyber-card {
-        padding: 15px;
+        padding: 16px;
     }
 
     .clue-container {
-        min-height: 80px;
+        min-height: 70px;
+        padding: 12px;
     }
 
     .clue-img {
-        max-height: 120px;
+        max-height: 100px;
     }
 }
 
-/* Touch device optimizations */
+/* Touch devices - Perfect touch UX */
 @media (hover: none) and (pointer: coarse) {
-
-    /* Remove hover effects on touch devices */
     .cyber-card:hover {
         box-shadow: var(--card-shadow);
     }
 
-    .mission-wrapper:hover {
+    .mission-wrapper:hover::before {
+        opacity: 0;
+    }
+
+    .mission-wrapper.selected:hover::before {
+        opacity: 0.15;
+    }
+
+    .mission-wrapper:hover i {
         transform: none;
+        color: var(--text-secondary);
+    }
+
+    .mission-wrapper.selected:hover i {
+        color: var(--brand-primary);
+        transform: scale(1.1);
     }
 
     .btn-main:hover {
@@ -659,37 +794,53 @@ h3,
         filter: none;
     }
 
-    .header-controls button:hover {
-        transform: none;
-    }
-
-    /* Active states for touch feedback */
     .btn-main:active {
-        transform: scale(0.95);
-        filter: brightness(0.9);
+        transform: scale(0.97);
+        filter: brightness(0.95);
     }
 
     .mission-wrapper:active {
         transform: scale(0.98);
     }
 
+    .header-controls button:hover {
+        transform: none;
+        background: var(--card-bg);
+        color: var(--text-primary);
+    }
+
     .header-controls button:active {
-        transform: scale(0.9);
+        transform: scale(0.92);
         background: var(--brand-primary);
         color: #fff;
     }
 }
 
-/* Safe area support for notched devices */
+/* Safe area for notched devices */
 @supports (padding: max(0px)) {
     .app-header {
-        padding-left: max(15px, env(safe-area-inset-left));
-        padding-right: max(15px, env(safe-area-inset-right));
+        padding-left: max(12px, env(safe-area-inset-left));
+        padding-right: max(12px, env(safe-area-inset-right));
+        padding-top: env(safe-area-inset-top);
     }
 
-    .container-narrow {
-        padding-left: max(15px, env(safe-area-inset-left));
-        padding-right: max(15px, env(safe-area-inset-right));
-        padding-bottom: max(20px, env(safe-area-inset-bottom));
+    #ui-wrapper {
+        padding-left: max(12px, env(safe-area-inset-left));
+        padding-right: max(12px, env(safe-area-inset-right));
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
     }
+}
+
+/* Smooth scrolling for iOS */
+#ui-wrapper {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent text selection on interactive elements */
+.btn-main,
+.btn-secondary,
+.mission-wrapper,
+.header-controls button {
+    user-select: none;
+    -webkit-user-select: none;
 }
