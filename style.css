@@ -180,7 +180,6 @@ h3,
 }
 
 .cyber-card:hover {
-    transform: translateY(-3px);
     box-shadow: 0 20px 50px -10px var(--brand-glow);
 }
 
@@ -412,4 +411,285 @@ h3,
     opacity: 1;
     transform: rotate(180deg);
     color: var(--brand-secondary);
+}
+
+/* ========================================
+   MOBILE RESPONSIVE STYLES
+   ======================================== */
+
+/* Mobile-first media queries */
+@media screen and (max-width: 768px) {
+
+    /* Body adjustments */
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Header */
+    .app-header {
+        height: 60px;
+        padding: 0 15px;
+    }
+
+    .brand-logo-container {
+        height: 35px;
+    }
+
+    .brand-logo-container span {
+        font-size: 0.9rem !important;
+    }
+
+    .header-controls button {
+        width: 36px;
+        height: 36px;
+    }
+
+    /* UI Wrapper */
+    #ui-wrapper {
+        padding-top: 70px;
+    }
+
+    .container-narrow {
+        padding: 15px;
+        max-width: 100%;
+    }
+
+    /* Cards */
+    .cyber-card {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    /* Game Title */
+    .cyber-card h1 {
+        font-size: 1.2rem !important;
+    }
+
+    /* Inputs */
+    .cyber-input {
+        padding: 12px;
+        font-size: 1rem;
+    }
+
+    /* Buttons - Touch friendly */
+    .btn-main {
+        padding: 14px 24px;
+        font-size: 0.9rem;
+        border-radius: 10px;
+        min-height: 48px;
+        /* Touch target */
+    }
+
+    .btn-secondary {
+        padding: 12px;
+        min-height: 44px;
+    }
+
+    /* Mission Grid */
+    .mission-grid {
+        gap: 10px;
+    }
+
+    .mission-wrapper {
+        padding: 15px;
+        border-radius: 12px;
+    }
+
+    .mission-wrapper i {
+        font-size: 2rem;
+        margin-bottom: 8px;
+    }
+
+    .mission-wrapper .font-tech {
+        font-size: 0.9rem;
+    }
+
+    /* Level View */
+    .clue-container {
+        padding: 15px;
+        min-height: 100px;
+    }
+
+    .clue-text {
+        font-size: 1.1rem;
+    }
+
+    .clue-img {
+        max-height: 200px;
+        object-fit: contain;
+    }
+
+    /* Timer */
+    #txt-timer {
+        font-size: 1.4rem !important;
+    }
+
+    #val-level {
+        font-size: 1.2rem !important;
+    }
+
+    /* Score pill */
+    .score-pill {
+        padding: 4px 12px;
+        font-size: 0.85rem;
+    }
+
+    /* Scoreboard */
+    #scoreboard-container {
+        height: auto;
+        max-height: 80vh;
+    }
+
+    #scoreboard-container h2 {
+        font-size: 1.2rem;
+    }
+
+    /* Win/Over screens */
+    #view-win div:first-child,
+    #view-over i {
+        transform: scale(0.9);
+    }
+
+    #txt-reveal-name {
+        font-size: 1.5rem !important;
+    }
+
+    #score-final {
+        font-size: 2.5rem !important;
+    }
+}
+
+/* Extra small screens (phones in portrait) */
+@media screen and (max-width: 400px) {
+    .container-narrow {
+        padding: 10px;
+    }
+
+    .cyber-card {
+        padding: 15px;
+        border-radius: 16px;
+    }
+
+    .cyber-card h1 {
+        font-size: 1rem !important;
+    }
+
+    .brand-logo-container {
+        height: 30px;
+    }
+
+    .brand-logo-container span {
+        font-size: 0.8rem !important;
+        margin-left: 5px !important;
+    }
+
+    .mission-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .mission-wrapper {
+        padding: 12px;
+    }
+
+    .mission-wrapper i {
+        font-size: 1.5rem;
+    }
+
+    .btn-main {
+        padding: 12px 20px;
+        font-size: 0.85rem;
+    }
+
+    .cyber-input {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+
+    #inp-answer {
+        font-size: 1.2rem !important;
+    }
+
+    .clue-text {
+        font-size: 1rem;
+    }
+
+    #txt-timer {
+        font-size: 1.2rem !important;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    #ui-wrapper {
+        padding-top: 65px;
+    }
+
+    .app-header {
+        height: 50px;
+    }
+
+    .cyber-card {
+        padding: 15px;
+    }
+
+    .clue-container {
+        min-height: 80px;
+    }
+
+    .clue-img {
+        max-height: 120px;
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+
+    /* Remove hover effects on touch devices */
+    .cyber-card:hover {
+        box-shadow: var(--card-shadow);
+    }
+
+    .mission-wrapper:hover {
+        transform: none;
+    }
+
+    .btn-main:hover {
+        transform: none;
+        filter: none;
+    }
+
+    .header-controls button:hover {
+        transform: none;
+    }
+
+    /* Active states for touch feedback */
+    .btn-main:active {
+        transform: scale(0.95);
+        filter: brightness(0.9);
+    }
+
+    .mission-wrapper:active {
+        transform: scale(0.98);
+    }
+
+    .header-controls button:active {
+        transform: scale(0.9);
+        background: var(--brand-primary);
+        color: #fff;
+    }
+}
+
+/* Safe area support for notched devices */
+@supports (padding: max(0px)) {
+    .app-header {
+        padding-left: max(15px, env(safe-area-inset-left));
+        padding-right: max(15px, env(safe-area-inset-right));
+    }
+
+    .container-narrow {
+        padding-left: max(15px, env(safe-area-inset-left));
+        padding-right: max(15px, env(safe-area-inset-right));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
 }
